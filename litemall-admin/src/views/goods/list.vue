@@ -21,7 +21,7 @@
               <span>{{ props.row.goodsSn }}</span>
             </el-form-item>
             <el-form-item label="宣传画廊">
-              <img v-for="pic in props.row.gallery" :key="pic" :src="pic" class="gallery">
+              <el-image v-for="pic in props.row.gallery" :key="pic" :src="pic" class="gallery" :preview-src-list="props.row.gallery" style="width: 40px; height: 40px" />
             </el-form-item>
             <el-form-item label="商品介绍">
               <span>{{ props.row.brief }}</span>
@@ -49,7 +49,7 @@
 
       <el-table-column align="center" property="iconUrl" label="图片">
         <template slot-scope="scope">
-          <img :src="scope.row.picUrl" width="40">
+          <el-image :src="thumbnail(scope.row.picUrl)" :preview-src-list="toPreview(scope.row, scope.row.picUrl)" style="width: 40px; height: 40px" />
         </template>
       </el-table-column>
 
@@ -110,6 +110,7 @@
 <style>
   .table-expand {
     font-size: 0;
+    padding-left: 60px;
   }
   .table-expand label {
     width: 100px;
@@ -132,12 +133,15 @@
 import { listGoods, deleteGoods } from '@/api/goods'
 import BackToTop from '@/components/BackToTop'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { thumbnail, toPreview } from '@/utils/index'
 
 export default {
   name: 'GoodsList',
   components: { BackToTop, Pagination },
   data() {
     return {
+      thumbnail,
+      toPreview,
       list: [],
       total: 0,
       listLoading: true,
@@ -185,18 +189,25 @@ export default {
       this.detailDialogVisible = true
     },
     handleDelete(row) {
-      deleteGoods(row).then(response => {
-        this.$notify.success({
-          title: '成功',
-          message: '删除成功'
+      this.$confirm('确定删除?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        deleteGoods(row).then(response => {
+          this.$notify.success({
+            title: '成功',
+            message: '删除成功'
+          })
+          this.getList()
+        }).catch(response => {
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
         })
-        this.getList()
-      }).catch(response => {
-        this.$notify.error({
-          title: '失败',
-          message: response.data.errmsg
-        })
-      })
+      }).catch(() => {})
     },
     handleDownload() {
       this.downloadLoading = true

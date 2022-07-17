@@ -25,7 +25,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -75,10 +74,8 @@ public class AdminAuthController {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ImageIO.write(image, "jpeg", outputStream);
-            BASE64Encoder encoder = new BASE64Encoder();
-            String base64 = encoder.encode(outputStream.toByteArray());
-            String captchaBase64 = "data:image/jpeg;base64," + base64.replaceAll("\r\n", "");
-            return captchaBase64;
+            String base64 = Base64.getEncoder().encodeToString(outputStream.toByteArray());
+            return "data:image/jpeg;base64," + base64.replaceAll("\r\n", "");
         } catch (IOException e) {
             return null;
         }
@@ -91,27 +88,27 @@ public class AdminAuthController {
     public Object login(@RequestBody String body, HttpServletRequest request) {
         String username = JacksonUtil.parseString(body, "username");
         String password = JacksonUtil.parseString(body, "password");
-        String code = JacksonUtil.parseString(body, "code");
+//        String code = JacksonUtil.parseString(body, "code");
 
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return ResponseUtil.badArgument();
         }
-        if (StringUtils.isEmpty(code)) {
-            return ResponseUtil.fail(ADMIN_INVALID_KAPTCHA_REQUIRED, "验证码不能空");
-        }
+//        if (StringUtils.isEmpty(code)) {
+//            return ResponseUtil.fail(ADMIN_INVALID_KAPTCHA_REQUIRED, "验证码不能空");
+//        }
 
-        HttpSession session = request.getSession();
-        String kaptcha = (String)session.getAttribute("kaptcha");
-        if (Objects.requireNonNull(code).compareToIgnoreCase(kaptcha) != 0) {
-            return ResponseUtil.fail(ADMIN_INVALID_KAPTCHA, "验证码不正确", doKaptcha(request));
-        }
+//        HttpSession session = request.getSession();
+//        String kaptcha = (String)session.getAttribute("kaptcha");
+//        if (Objects.requireNonNull(code).compareToIgnoreCase(kaptcha) != 0) {
+//            return ResponseUtil.fail(ADMIN_INVALID_KAPTCHA, "验证码不正确", doKaptcha(request));
+//        }
 
         Subject currentUser = SecurityUtils.getSubject();
         try {
             currentUser.login(new UsernamePasswordToken(username, password));
         } catch (UnknownAccountException uae) {
             logHelper.logAuthFail("登录", "用户帐号或密码不正确");
-            return ResponseUtil.fail(ADMIN_INVALID_ACCOUNT, "用户帐号或密码不正确");
+            return ResponseUtil.fail(ADMIN_INVALID_ACCOUNT, "用户帐号或密码不正确", doKaptcha(request));
         } catch (LockedAccountException lae) {
             logHelper.logAuthFail("登录", "用户帐号已锁定不可用");
             return ResponseUtil.fail(ADMIN_INVALID_ACCOUNT, "用户帐号已锁定不可用");

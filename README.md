@@ -13,17 +13,7 @@ litemall = Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 
 
 ### 小商场实例
 
-* renard-wx模块实例
-
-![](./doc/pics/readme/renard_wx_demo.png)
-
-> 注意：此实例是真实小商场，开发者可以购买商品和付款，但请不要尝试退款操作。
-
-* litemall-wx模块实例
-
-![](./doc/pics/readme/litemall_wx_demo.png)
-
-> 注意：此实例是测试小商场，开发者请不要尝试购买商品、付款、退款操作。
+暂无实例，建议开发者本地测试。
 
 ### 轻商场实例
 
@@ -43,7 +33,7 @@ litemall = Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 
 
 1. 浏览器打开，输入以下网址: [http://122.51.199.160:8080/#/login](http://122.51.199.160:8080/#/login)
 2. 管理员用户名`admin123`，管理员密码`admin123`
-> 注意：此实例只是测试管理后台，不是前两个小商城的管理后台。
+> 注意：此实例只是测试管理后台。
 
 ## 项目代码
 
@@ -154,7 +144,7 @@ litemall = Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 
         
 ## 开发计划
 
-当前版本[v1.7.0](https://linlinjava.gitbook.io/litemall/changelog)
+当前版本[v1.8.0](https://linlinjava.gitbook.io/litemall/changelog)
 
 目前项目开发中，存在诸多不足，以下是目前规划的开发计划。
 
@@ -233,7 +223,7 @@ V 3.0.0 完成以下目标：
 
 ## 问题
 
-![](doc/pics/readme/qq3.png)
+![](doc/pics/readme/qq4.png)
 
  * 开发者有问题或者好的建议可以用Issues反馈交流，请给出详细信息
  * 在开发交流群中应讨论开发、业务和合作问题
